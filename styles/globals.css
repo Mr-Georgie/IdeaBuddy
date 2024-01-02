@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .btn {
+        @apply rounded-2xl bg-indigo-500 px-4 py-2 text-white hover:bg-indigo-600 disabled:bg-indigo-300;
+    }
+    .btn-white {
+        @apply cursor-pointer rounded-2xl px-4 py-2 hover:bg-slate-100 disabled:bg-indigo-300;
+    }
+    .chat {
+        @apply cursor-pointer rounded-2xl border px-4 py-2 shadow-sm shadow-black/10 hover:bg-slate-100 disabled:bg-indigo-300;
+    }
+    .input {
+        @apply rounded-md bg-gray-700 p-2 text-white focus:border-indigo-500 focus:bg-gray-600 focus:outline focus:outline-indigo-500;
+    }
+    .textarea {
+        /* bg-gray-700 */
+        @apply resize-none rounded-2xl border border-slate-400 bg-slate-100 px-6 py-2 text-black focus:border-indigo-500 focus:bg-slate-50 focus:outline focus:outline-indigo-500;
+    }
+}
