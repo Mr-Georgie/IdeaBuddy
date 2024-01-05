@@ -10,7 +10,7 @@ export const Message = ({ role, content, streaming }) => {
     return (
         <div
             className={`grid grid-cols-[30px_1fr] gap-5 ${
-                role === "assistant" ? "bg-slate-50" : ""
+                role === "assistant" ? "bg-white" : "bg-[#F2F6FA]"
             } border-1 mx-6 my-4 rounded-lg border p-6 md:mx-10 lg:mx-32`}
         >
             <div className="">

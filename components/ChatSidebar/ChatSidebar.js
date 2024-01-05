@@ -3,49 +3,106 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export const ChatSidebar = () => {
+    const [todaysChatList, setTodaysChatList] = useState([]);
+    const [last7DaysChatList, setLast7DaysChatList] = useState([]);
+    const [olderChatList, setOlderChatList] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchResult, setSearchResult] = useState([]);
+
+    useEffect(() => {
+        const loadChatList = async () => {
+            const response = await fetch(`/api/chat/getChatList`, {
+                method: "POST",
+            });
+            const json = await response.json();
+
+            if (json?.chats) {
+                const today = new Date();
+                const sevenDaysAgo = new Date();
+                sevenDaysAgo.setDate(today.getDate() - 7);
+
+                const chatsToday = json.chats.filter(
+                    (chat) => new Date(chat.time) >= today.setHours(0, 0, 0, 0)
+                );
+
+                const chatsLast7Days = json.chats.filter(
+                    (chat) =>
+                        new Date(chat.time) >=
+                            sevenDaysAgo.setHours(0, 0, 0, 0) &&
+                        new Date(chat.time) < today.setHours(0, 0, 0, 0)
+                );
+
+                const chatsOlder = json.chats.filter(
+                    (chat) =>
+                        new Date(chat.time) < sevenDaysAgo.setHours(0, 0, 0, 0)
+                );
+
+                setTodaysChatList(chatsToday);
+                setLast7DaysChatList(chatsLast7Days);
+                setOlderChatList(chatsOlder);
+            }
+        };
+        loadChatList();
+
+        if (searchTerm.length > 0) {
+            searchChats(searchTerm);
+        } else {
+            // If search term is empty, reset the search result
+            setSearchResult([]);
+        }
+    }, [todaysChatList, last7DaysChatList, olderChatList, searchTerm]);
+
+    const searchChats = (term) => {
+        const todayMatches = todaysChatList.filter((chat) =>
+            chat.title.includes(term)
+        );
+        const last7DaysMatches = last7DaysChatList.filter((chat) =>
+            chat.title.includes(term)
+        );
+        const olderMatches = olderChatList.filter((chat) =>
+            chat.title.includes(term)
+        );
+
+        const combinedResult = [
+            ...todayMatches,
+            ...last7DaysMatches,
+            ...olderMatches,
+        ];
+        setSearchResult(combinedResult);
+    };
+
+    const handleSearchInputChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
     const { user } = useUser();
 
     return (
-        <div className="flex flex-col overflow-hidden">
-            <div className="flex gap-2 border border-b p-4">
+        <div className="flex flex-col overflow-hidden border-r">
+            <Link
+                href=""
+                className="btn-white mx-4 mt-2 flex items-center gap-4 text-sm"
+            >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
                     viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="h-6 w-6"
+                    fill="currentColor"
+                    className="h-6 w-6 text-indigo-500"
                 >
                     <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
-                    />
-                </svg>
-                <div className="font-bold">Idea Buddy</div>
-            </div>
-            <Link href="" className="btn mx-4 my-2 flex gap-4 p-4">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="h-6 w-6"
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
+                        fillRule="evenodd"
+                        d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
+                        clipRule="evenodd"
                     />
                 </svg>
 
-                <span className="">New Chat</span>
+                <span className="">New Idea?</span>
             </Link>
             <div href="" className="mx-4 my-2 flex gap-4">
-                <div className="relative w-full rounded-2xl border border-gray-300 bg-slate-100 p-2 transition-all duration-300 focus-within:border-indigo-500 focus:bg-white">
+                <div className="relative w-full rounded-2xl border p-2 transition-all duration-300 focus-within:border-indigo-500">
                     <span className="absolute left-2 top-1/2 -translate-y-1/2 transform">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -64,126 +121,159 @@ export const ChatSidebar = () => {
                     </span>
                     <input
                         type="text"
-                        className="w-full rounded-full bg-transparent py-2 pl-8 pr-4 focus:outline-none"
+                        className="w-full rounded-full bg-transparent py-0 pl-8 pr-4 focus:outline-none"
                         placeholder="Search..."
+                        value={searchTerm}
+                        onChange={handleSearchInputChange}
                     />
                 </div>
             </div>
-            <div className="mb-8 mt-12 flex-1 overflow-auto">
-                <Link href="" className="chat mx-4 my-2 flex gap-4 p-4">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="h-5 w-5"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                        />
-                    </svg>
-                    <div className="flex flex-col">
-                        <span className="text-sm">New Chat</span>
-                        <span className="text-xs font-light">
-                            It's basically a note...
-                        </span>
+            <div className="mb-8 mt-12 flex flex-1 flex-col gap-3 overflow-auto">
+                {searchTerm ? (
+                    <div className="mx-4 rounded-2xl bg-[#F2F6FA]">
+                        <h5 className="p-3 text-xs font-light">
+                            Search results
+                        </h5>
+                        {searchResult.map((chat) => (
+                            <Link
+                                key={chat._id}
+                                href={`/chat/${chat._id}`}
+                                className="flex cursor-pointer gap-4 border-t p-3 hover:bg-slate-200"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="h-5 w-5"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+                                    />
+                                </svg>
+                                <div className="flex">
+                                    <span className="text-sm">
+                                        {chat.title}
+                                    </span>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
-                </Link>
-                <Link href="" className="chat mx-4 my-2 flex gap-4 p-4">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="h-5 w-5"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                        />
-                    </svg>
-                    <div className="flex flex-col">
-                        <span className="text-sm">New Chat</span>
-                        <span className="text-xs font-light">
-                            It's basically a note...
-                        </span>
+                ) : (
+                    <></>
+                )}
+                {!searchTerm ? (
+                    <div className="mx-4 rounded-2xl bg-[#F2F6FA]">
+                        <h5 className="p-3 text-xs font-light">
+                            Today's ideas
+                        </h5>
+                        {todaysChatList.map((chat) => (
+                            <Link
+                                key={chat._id}
+                                href={`/chat/${chat._id}`}
+                                className="flex cursor-pointer gap-4 border-t p-3 hover:bg-slate-200"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="h-5 w-5"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+                                    />
+                                </svg>
+                                <div className="flex">
+                                    <span className="text-sm">
+                                        {chat.title}
+                                    </span>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
-                </Link>
-                <Link href="" className="chat mx-4 my-2 flex gap-4 p-4">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="h-5 w-5"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                        />
-                    </svg>
-                    <div className="flex flex-col">
-                        <span className="text-sm">New Chat</span>
-                        <span className="text-xs font-light">
-                            It's basically a note...
-                        </span>
+                ) : (
+                    <></>
+                )}
+                {last7DaysChatList.length && !searchTerm ? (
+                    <div className="mx-4 rounded-2xl bg-[#F2F6FA]">
+                        <h5 className="p-3 text-xs font-light">
+                            Previous 7 days
+                        </h5>
+                        {last7DaysChatList.map((chat) => (
+                            <Link
+                                key={chat._id}
+                                href={`/chat/${chat._id}`}
+                                className="flex cursor-pointer gap-4 border-t p-3 hover:bg-slate-200"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="h-5 w-5"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+                                    />
+                                </svg>
+                                <div className="flex">
+                                    <span className="text-sm">
+                                        {chat.title}
+                                    </span>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
-                </Link>
-                <Link href="" className="chat mx-4 my-2 flex gap-4 p-4">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="h-5 w-5"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                        />
-                    </svg>
-                    <div className="flex flex-col">
-                        <span className="text-sm">New Chat</span>
-                        <span className="text-xs font-light">
-                            It's basically a note...
-                        </span>
+                ) : (
+                    <></>
+                )}
+                {olderChatList.length && !searchTerm ? (
+                    <div className="mx-4 rounded-2xl bg-[#F2F6FA]">
+                        <h5 className="p-3 text-xs font-light">Older ideas</h5>
+                        {olderChatList.map((chat) => (
+                            <Link
+                                href={`/chat/${chat._id}`}
+                                className="flex cursor-pointer gap-4 border-t p-3 hover:bg-slate-200"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="h-5 w-5"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+                                    />
+                                </svg>
+                                <div className="flex">
+                                    <span className="text-sm">
+                                        {chat.title}
+                                    </span>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
-                </Link>
-                <Link href="" className="chat mx-4 my-2 flex gap-4 p-4">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="h-5 w-5"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                        />
-                    </svg>
-                    <div className="flex flex-col">
-                        <span className="text-sm">New Chat</span>
-                        <span className="text-xs font-light">
-                            It's basically a note...
-                        </span>
-                    </div>
-                </Link>
+                ) : (
+                    <></>
+                )}
             </div>
 
             <div className="">
-                <div className="btn-white mx-4 my-2 flex gap-4 p-4">
+                <div className="btn-white mx-4 my-2 flex gap-4 text-sm">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -203,7 +293,7 @@ export const ChatSidebar = () => {
                         About
                     </Link>
                 </div>
-                <div className="btn-white mx-4 my-2 flex gap-4 p-4">
+                <div className="btn-white mx-4 my-2 flex gap-4 text-sm">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"

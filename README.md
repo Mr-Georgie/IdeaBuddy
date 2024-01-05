@@ -4,7 +4,7 @@ Idea Buddy is an incredibly intelligent and quick-thinking personal brainstormin
 
 ## Preview
 
-<img width="1440" alt="Screenshot 2024-01-02 at 21 54 15" src="https://github.com/Mr-Georgie/IdeaBuddy/assets/28518667/bb4b0fdf-c6d2-4ff6-8ebb-a9c2d71996a3">
+<img width="1440" alt="Idea Buddy Screenshot" src="https://github.com/Mr-Georgie/IdeaBuddy/assets/28518667/bb4b0fdf-c6d2-4ff6-8ebb-a9c2d71996a3">
 
 ## Getting Started
 

@@ -15,7 +15,7 @@ export default async function POST(req) {
         // Truncate or limit the message to fit within the model's maximum context length
         let truncatedMessage = message.substring(0, 4096);
 
-        const response = await openai.createChatCompletion({
+        const openAIResponse = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
             stream: true,
             max_tokens: 2048,
@@ -52,7 +52,7 @@ export default async function POST(req) {
             ],
         });
 
-        const stream = OpenAIStream(response);
+        const stream = OpenAIStream(openAIResponse);
 
         return new StreamingTextResponse(stream);
     } catch (error) {
