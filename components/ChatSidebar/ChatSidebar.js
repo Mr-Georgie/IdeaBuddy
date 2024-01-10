@@ -74,7 +74,7 @@ export const ChatSidebar = ({ chatId }) => {
             // If search term is empty, reset the search result
             setSearchResult([]);
         }
-    }, [todaysChatList, last7DaysChatList, olderChatList, searchTerm, chatId]);
+    }, [todaysChatList, last7DaysChatList, olderChatList, searchTerm, chatId]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const searchChats = (term) => {
         const todayMatches = todaysChatList.filter((chat) =>
