@@ -1,16 +1,26 @@
+import { useAppContext } from "@/AppContext";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { SidebarItem } from "../SidebarItem/SidebarItem";
 
-export const ChatSidebar = () => {
-    const [todaysChatList, setTodaysChatList] = useState([]);
-    const [last7DaysChatList, setLast7DaysChatList] = useState([]);
-    const [olderChatList, setOlderChatList] = useState([]);
+export const ChatSidebar = ({ chatId }) => {
+    const {
+        fetchingResponse,
+        todaysChatList,
+        setTodaysChatList,
+        last7DaysChatList,
+        setLast7DaysChatList,
+        olderChatList,
+        setOlderChatList,
+        searchResult,
+        setSearchResult,
+    } = useAppContext();
+
     const [searchTerm, setSearchTerm] = useState("");
-    const [searchResult, setSearchResult] = useState([]);
 
     useEffect(() => {
         const loadChatList = async () => {
@@ -53,7 +63,7 @@ export const ChatSidebar = () => {
             // If search term is empty, reset the search result
             setSearchResult([]);
         }
-    }, [todaysChatList, last7DaysChatList, olderChatList, searchTerm]);
+    }, [todaysChatList, last7DaysChatList, olderChatList, searchTerm, chatId]);
 
     const searchChats = (term) => {
         const todayMatches = todaysChatList.filter((chat) =>
@@ -82,26 +92,48 @@ export const ChatSidebar = () => {
 
     return (
         <div className="flex flex-col overflow-hidden border-r">
-            <Link
-                href=""
-                className="btn-white mx-4 mt-2 flex items-center gap-4 text-sm"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="h-6 w-6 text-indigo-500"
+            {!fetchingResponse ? (
+                <Link
+                    href=""
+                    className="btn-white mx-4 mt-2 flex items-center gap-4 text-sm"
                 >
-                    <path
-                        fillRule="evenodd"
-                        d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
-                        clipRule="evenodd"
-                    />
-                </svg>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="h-6 w-6 text-indigo-500"
+                    >
+                        <path
+                            fillRule="evenodd"
+                            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
+                            clipRule="evenodd"
+                        />
+                    </svg>
 
-                <span className="">New Idea?</span>
-            </Link>
-            <div href="" className="mx-4 my-2 flex gap-4">
+                    <span className="">New Idea?</span>
+                </Link>
+            ) : (
+                <div
+                    title={"Still fetching response from AI"}
+                    className="btn-white mx-4 mt-2 flex cursor-not-allowed items-center gap-4 text-sm opacity-50"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="h-6 w-6 text-indigo-500"
+                    >
+                        <path
+                            fillRule="evenodd"
+                            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
+                            clipRule="evenodd"
+                        />
+                    </svg>
+
+                    <span className="">New Idea?</span>
+                </div>
+            )}
+            <div className="mx-4 my-2 flex gap-4">
                 <div className="relative w-full rounded-2xl border p-2 transition-all duration-300 focus-within:border-indigo-500">
                     <span className="absolute left-2 top-1/2 -translate-y-1/2 transform">
                         <svg
@@ -125,147 +157,50 @@ export const ChatSidebar = () => {
                         placeholder="Search..."
                         value={searchTerm}
                         onChange={handleSearchInputChange}
+                        disabled={fetchingResponse}
                     />
                 </div>
             </div>
             <div className="mb-8 mt-12 flex flex-1 flex-col gap-3 overflow-auto">
                 {searchTerm ? (
-                    <div className="mx-4 rounded-2xl bg-[#F2F6FA]">
-                        <h5 className="p-3 text-xs font-light">
+                    <div className="mx-4 rounded-2xl bg-[#F2F6FA] pb-2">
+                        <h5 className="border-b p-3 text-xs font-light">
                             Search results
                         </h5>
-                        {searchResult.map((chat) => (
-                            <Link
-                                key={chat._id}
-                                href={`/chat/${chat._id}`}
-                                className="flex cursor-pointer gap-4 border-t p-3 hover:bg-slate-200"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="h-5 w-5"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                                    />
-                                </svg>
-                                <div className="flex">
-                                    <span className="text-sm">
-                                        {chat.title}
-                                    </span>
-                                </div>
-                            </Link>
-                        ))}
+                        <SidebarItem chats={searchResult} chatId={chatId} />
                     </div>
                 ) : (
                     <></>
                 )}
                 {!searchTerm ? (
-                    <div className="mx-4 rounded-2xl bg-[#F2F6FA]">
-                        <h5 className="p-3 text-xs font-light">
+                    <div className="mx-4 rounded-2xl bg-[#F2F6FA] pb-2">
+                        <h5 className="border-b p-3 text-xs font-light">
                             Today's ideas
                         </h5>
-                        {todaysChatList.map((chat) => (
-                            <Link
-                                key={chat._id}
-                                href={`/chat/${chat._id}`}
-                                className="flex cursor-pointer gap-4 border-t p-3 hover:bg-slate-200"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="h-5 w-5"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                                    />
-                                </svg>
-                                <div className="flex">
-                                    <span className="text-sm">
-                                        {chat.title}
-                                    </span>
-                                </div>
-                            </Link>
-                        ))}
+                        <SidebarItem chats={todaysChatList} chatId={chatId} />
                     </div>
                 ) : (
                     <></>
                 )}
                 {last7DaysChatList.length && !searchTerm ? (
-                    <div className="mx-4 rounded-2xl bg-[#F2F6FA]">
-                        <h5 className="p-3 text-xs font-light">
+                    <div className="mx-4 rounded-2xl bg-[#F2F6FA] pb-2">
+                        <h5 className="border-b p-3 text-xs font-light">
                             Previous 7 days
                         </h5>
-                        {last7DaysChatList.map((chat) => (
-                            <Link
-                                key={chat._id}
-                                href={`/chat/${chat._id}`}
-                                className="flex cursor-pointer gap-4 border-t p-3 hover:bg-slate-200"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="h-5 w-5"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                                    />
-                                </svg>
-                                <div className="flex">
-                                    <span className="text-sm">
-                                        {chat.title}
-                                    </span>
-                                </div>
-                            </Link>
-                        ))}
+                        <SidebarItem
+                            chats={last7DaysChatList}
+                            chatId={chatId}
+                        />
                     </div>
                 ) : (
                     <></>
                 )}
                 {olderChatList.length && !searchTerm ? (
-                    <div className="mx-4 rounded-2xl bg-[#F2F6FA]">
-                        <h5 className="p-3 text-xs font-light">Older ideas</h5>
-                        {olderChatList.map((chat) => (
-                            <Link
-                                href={`/chat/${chat._id}`}
-                                className="flex cursor-pointer gap-4 border-t p-3 hover:bg-slate-200"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="h-5 w-5"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                                    />
-                                </svg>
-                                <div className="flex">
-                                    <span className="text-sm">
-                                        {chat.title}
-                                    </span>
-                                </div>
-                            </Link>
-                        ))}
+                    <div className="mx-4 rounded-2xl bg-[#F2F6FA] pb-2">
+                        <h5 className="border-b p-3 text-xs font-light">
+                            Older ideas
+                        </h5>
+                        <SidebarItem chats={olderChatList} chatId={chatId} />
                     </div>
                 ) : (
                     <></>
@@ -288,10 +223,18 @@ export const ChatSidebar = () => {
                             d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
                         />
                     </svg>
-
-                    <Link href="/" className="">
-                        About
-                    </Link>
+                    {!fetchingResponse ? (
+                        <Link href="/" className="">
+                            About
+                        </Link>
+                    ) : (
+                        <div
+                            title="Still fetching response from AI"
+                            className="cursor-not-allowed opacity-50"
+                        >
+                            About
+                        </div>
+                    )}
                 </div>
                 <div className="btn-white mx-4 my-2 flex gap-4 text-sm">
                     <svg
@@ -308,10 +251,18 @@ export const ChatSidebar = () => {
                             d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9"
                         />
                     </svg>
-
-                    <Link href="/api/auth/logout" className="">
-                        Logout
-                    </Link>
+                    {!fetchingResponse ? (
+                        <Link href="/api/auth/logout" className="">
+                            Logout
+                        </Link>
+                    ) : (
+                        <div
+                            title="Still fetching response from AI"
+                            className="cursor-not-allowed opacity-50"
+                        >
+                            Logout
+                        </div>
+                    )}
                 </div>
                 <div className="mt-3 border-b border-t p-4">
                     {!!user ? (

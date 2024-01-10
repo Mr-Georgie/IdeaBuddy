@@ -5,6 +5,17 @@ export default async function handler(req, res) {
     try {
         const { user } = await getSession(req, res);
         const { message } = req.body;
+
+        // validate message data
+        if (!message || typeof message !== "string" || message.length > 250) {
+            res.status(422).json({
+                message:
+                    "message is required and must be less than 200 characters",
+            });
+
+            return;
+        }
+
         const newUserMessage = {
             role: "user",
             content: message,
@@ -12,6 +23,7 @@ export default async function handler(req, res) {
 
         const client = await clientPromise;
         const db = client.db("Ideadb");
+
         const chat = await db.collection("chats").insertOne({
             userId: user.sub,
             messages: [newUserMessage],
