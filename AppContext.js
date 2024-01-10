@@ -8,6 +8,7 @@ export const AppProvider = ({ children }) => {
     const [last7DaysChatList, setLast7DaysChatList] = useState([]);
     const [olderChatList, setOlderChatList] = useState([]);
     const [searchResult, setSearchResult] = useState([]);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const contextValue = {
         fetchingResponse,
@@ -20,6 +21,8 @@ export const AppProvider = ({ children }) => {
         setOlderChatList,
         searchResult,
         setSearchResult,
+        isSidebarOpen,
+        setIsSidebarOpen,
     };
 
     return (

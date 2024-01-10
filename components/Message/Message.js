@@ -8,7 +8,9 @@ export const Message = ({ role, content }) => {
     return (
         <div
             className={`grid grid-cols-[30px_1fr] gap-5 ${
-                role === "assistant" ? "bg-white" : role === "notice" ? "bg-red-400" : "bg-[#F2F6FA]"
+                role === "assistant"
+                    ? "bg-white dark:border-gray-500 dark:bg-transparent "
+                    : "bg-[#F2F6FA] dark:border-gray-500 dark:bg-transparent "
             } border-1 mx-6 my-4 rounded-lg border p-6 md:mx-10 lg:mx-44 xl:mx-60`}
         >
             <div className="">
@@ -42,9 +44,11 @@ export const Message = ({ role, content }) => {
             </div>
             <div className="prose">
                 <div className="flex justify-between pb-3 font-semibold">
-                    <span>{role === "assistant" ? "Idea Buddy" : "You"}</span>
+                    <span className="dark:text-white">
+                        {role === "assistant" ? "Idea Buddy" : "You"}
+                    </span>
 
-                    {role === "user" && (
+                    {/* {role === "user" && (
                         <span className=" cursor-pointer rounded-sm border border-gray-300 p-2 opacity-60 hover:opacity-90">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +56,7 @@ export const Message = ({ role, content }) => {
                                 viewBox="0 0 24 24"
                                 strokeWidth={1.5}
                                 stroke="currentColor"
-                                className="h-5 w-5"
+                                className="h-5 w-5 dark:text-white"
                             >
                                 <path
                                     strokeLinecap="round"
@@ -61,9 +65,11 @@ export const Message = ({ role, content }) => {
                                 />
                             </svg>
                         </span>
-                    )}
+                    )} */}
                 </div>
-                <ReactMarkdown className="w-full">{content}</ReactMarkdown>
+                <ReactMarkdown className="w-full dark:text-white">
+                    {content}
+                </ReactMarkdown>
             </div>
         </div>
     );

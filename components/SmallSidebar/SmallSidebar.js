@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { SidebarItem } from "../SidebarItem/SidebarItem";
 
-export const ChatSidebar = ({ chatId }) => {
+export const SmallSidebar = ({ chatId }) => {
     const {
         fetchingResponse,
         todaysChatList,
@@ -18,27 +18,22 @@ export const ChatSidebar = ({ chatId }) => {
         setOlderChatList,
         searchResult,
         setSearchResult,
+        isSidebarOpen,
+        setIsSidebarOpen,
     } = useAppContext();
 
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+
     const [searchTerm, setSearchTerm] = useState("");
-    const [fetchChatListSuccess, setFetchChatListSuccess] = useState(true);
 
     useEffect(() => {
         const loadChatList = async () => {
             const response = await fetch(`/api/chat/getChatList`, {
                 method: "POST",
             });
-
-            let json;
-
-            if (!response.ok) {
-                json = await response.json();
-                // alert(`HTTP error! Status: ${json.message}`);
-                setFetchChatListSuccess(false);
-                return;
-            }
-
-            json = await response.json();
+            const json = await response.json();
 
             if (json?.chats) {
                 const today = new Date();
@@ -102,7 +97,25 @@ export const ChatSidebar = ({ chatId }) => {
     const { user } = useUser();
 
     return (
-        <div className="hidden flex-col overflow-hidden border-r sm:flex dark:border-black dark:bg-black">
+        <div className="fixed z-50 h-screen w-[250px] bg-white shadow-lg sm:hidden dark:border-black dark:bg-black">
+            <div className="flex justify-end p-3">
+                <button className="btn-chat" onClick={toggleSidebar}>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="h-6 w-6"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18 18 6M6 6l12 12"
+                        />
+                    </svg>
+                </button>
+            </div>
             {!fetchingResponse ? (
                 <Link
                     href=""
@@ -172,71 +185,51 @@ export const ChatSidebar = ({ chatId }) => {
                     />
                 </div>
             </div>
-            {fetchChatListSuccess ? (
-                <div className="mb-8 mt-12 flex flex-1 flex-col gap-3 overflow-auto">
-                    {searchTerm ? (
-                        <div className="mx-4 rounded-2xl  pb-2 dark:bg-black">
-                            <h5 className="p-3 text-xs font-light dark:text-gray-400">
-                                Search results
-                            </h5>
-                            <SidebarItem chats={searchResult} chatId={chatId} />
-                        </div>
-                    ) : (
-                        <></>
-                    )}
-                    {!searchTerm ? (
-                        <div className="mx-4 rounded-2xl  pb-2 dark:bg-black">
-                            <h5 className="p-3 text-xs font-light dark:text-gray-400">
-                                Today's ideas
-                            </h5>
-                            <SidebarItem
-                                chats={todaysChatList}
-                                chatId={chatId}
-                            />
-                        </div>
-                    ) : (
-                        <></>
-                    )}
-                    {last7DaysChatList.length && !searchTerm ? (
-                        <div className="mx-4 rounded-2xl  pb-2 dark:bg-black">
-                            <h5 className=" p-3 text-xs font-light dark:text-gray-400">
-                                Previous 7 days
-                            </h5>
-                            <SidebarItem
-                                chats={last7DaysChatList}
-                                chatId={chatId}
-                            />
-                        </div>
-                    ) : (
-                        <></>
-                    )}
-                    {olderChatList.length && !searchTerm ? (
-                        <div className="mx-4 rounded-2xl  pb-2">
-                            <h5 className="-b p-3 text-xs font-light dark:text-gray-400">
-                                Older ideas
-                            </h5>
-                            <SidebarItem
-                                chats={olderChatList}
-                                chatId={chatId}
-                            />
-                        </div>
-                    ) : (
-                        <></>
-                    )}
-                </div>
-            ) : (
-                <div className="mb-8 mt-12 flex flex-1 flex-col gap-3 overflow-auto">
-                    <div className="mx-4 rounded-2xl pb-2">
-                        <h5 className=" my-3 px-3 font-light text-red-400 dark:text-gray-400">
-                            Oops! Sorry
+            <div className="mb-8 mt-12 flex flex-1 flex-col gap-3 overflow-auto">
+                {searchTerm ? (
+                    <div className="mx-4 rounded-2xl  pb-2 dark:bg-black">
+                        <h5 className="p-3 text-xs font-light dark:text-gray-400">
+                            Search results
                         </h5>
-                        <h6 className="px-3 text-sm">
-                            Could not fetch saved chats
-                        </h6>
-                        <h6 className="px-3 text-sm">Refresh your browser</h6>
+                        <SidebarItem chats={searchResult} chatId={chatId} />
                     </div>
-                </div>
-            )}
+                ) : (
+                    <></>
+                )}
+                {!searchTerm ? (
+                    <div className="mx-4 rounded-2xl  pb-2 dark:bg-black">
+                        <h5 className="p-3 text-xs font-light dark:text-gray-400">
+                            Today's ideas
+                        </h5>
+                        <SidebarItem chats={todaysChatList} chatId={chatId} />
+                    </div>
+                ) : (
+                    <></>
+                )}
+                {last7DaysChatList.length && !searchTerm ? (
+                    <div className="mx-4 rounded-2xl  pb-2 dark:bg-black">
+                        <h5 className=" p-3 text-xs font-light dark:text-gray-400">
+                            Previous 7 days
+                        </h5>
+                        <SidebarItem
+                            chats={last7DaysChatList}
+                            chatId={chatId}
+                        />
+                    </div>
+                ) : (
+                    <></>
+                )}
+                {olderChatList.length && !searchTerm ? (
+                    <div className="mx-4 rounded-2xl  pb-2">
+                        <h5 className="-b p-3 text-xs font-light dark:text-gray-400">
+                            Older ideas
+                        </h5>
+                        <SidebarItem chats={olderChatList} chatId={chatId} />
+                    </div>
+                ) : (
+                    <></>
+                )}
+            </div>
 
             <div className="">
                 <div className="mx-8 my-6 flex justify-between text-sm">

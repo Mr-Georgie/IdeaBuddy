@@ -6,6 +6,10 @@ export default async function handler(req, res) {
         const { user } = await getSession(req, res);
         const client = await clientPromise;
         const db = client.db("Ideadb");
+
+        // the line below should not be uncommented unless you want to reset db
+        // await db.collection("chats").deleteMany({});
+
         const chats = await db
             .collection("chats")
             .find(

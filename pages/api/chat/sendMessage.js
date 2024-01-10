@@ -113,6 +113,11 @@ export default async function POST(req) {
                     content:
                         "Your response must be well formatted as markdown with headings, sub-headings, spacings and new lines",
                 },
+                {
+                    role: "system",
+                    content:
+                        "You should also be able to provide the right response when user supply follow up questions",
+                },
                 ...messagesToInclude.map((chatMessage) => ({
                     role: chatMessage.role,
                     content: chatMessage.content,
