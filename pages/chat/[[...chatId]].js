@@ -12,8 +12,12 @@ import { useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
 
 export default function ChatPage({ chatId, messages }) {
-    const { fetchingResponse, setFetchingResponse, isSidebarOpen } =
-        useAppContext();
+    const {
+        fetchingResponse,
+        setFetchingResponse,
+        isSidebarOpen,
+        setIsSidebarOpen,
+    } = useAppContext();
 
     const inputRef = useRef(null);
 
@@ -29,6 +33,7 @@ export default function ChatPage({ chatId, messages }) {
     // when app route changes
     useEffect(() => {
         setNewChatMessages([]);
+        setIsSidebarOpen(false);
         setNewChatId(null);
         if (!chatId) {
             setRemovePlaceholder(false);

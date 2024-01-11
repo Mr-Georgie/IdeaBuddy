@@ -7,13 +7,13 @@ export const Message = ({ role, content }) => {
 
     return (
         <div
-            className={`grid grid-cols-[30px_1fr] gap-5 ${
+            className={`gap-5 sm:grid sm:grid-cols-[30px_1fr] ${
                 role === "assistant"
                     ? "bg-white dark:border-gray-500 dark:bg-transparent "
                     : "bg-[#F2F6FA] dark:border-gray-500 dark:bg-transparent "
             } border-1 mx-6 my-4 rounded-lg border p-6 md:mx-10 lg:mx-44 xl:mx-60`}
         >
-            <div className="">
+            <div className="flex items-center gap-4 sm:block">
                 {role === "user" && !!user && (
                     <Image
                         src={user.picture}
@@ -41,31 +41,17 @@ export const Message = ({ role, content }) => {
                         </svg>
                     </div>
                 )}
-            </div>
-            <div className="prose">
-                <div className="flex justify-between pb-3 font-semibold">
+                <div className="font-semibold sm:hidden">
                     <span className="dark:text-white">
                         {role === "assistant" ? "Idea Buddy" : "You"}
                     </span>
-
-                    {/* {role === "user" && (
-                        <span className=" cursor-pointer rounded-sm border border-gray-300 p-2 opacity-60 hover:opacity-90">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="h-5 w-5 dark:text-white"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
-                                />
-                            </svg>
-                        </span>
-                    )} */}
+                </div>
+            </div>
+            <div className="prose">
+                <div className="hidden sm:flex sm:justify-between sm:pb-3 sm:font-semibold">
+                    <span className="dark:text-white">
+                        {role === "assistant" ? "Idea Buddy" : "You"}
+                    </span>
                 </div>
                 <ReactMarkdown className="w-full dark:text-white">
                     {content}
