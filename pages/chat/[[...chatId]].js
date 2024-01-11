@@ -243,7 +243,7 @@ export default function ChatPage({ chatId, messages }) {
                                 </span>
                                 <span>What new idea did you come up with?</span>
                             </div>
-                            <div className="border-1 chat-content mx-6 my-4 rounded-lg border border-gray-500 p-10 font-mono md:mx-10 lg:mx-44 xl:mx-60">
+                            <div className="border-1 chat-content mx-6 rounded-lg border border-gray-500 p-10 font-mono md:mx-10 lg:mx-44 xl:mx-60">
                                 <h4 className="pb-3">Examples</h4>
                                 <div className="flex flex-col text-sm font-light text-gray-400">
                                     <span className="">

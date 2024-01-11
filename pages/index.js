@@ -16,7 +16,7 @@ export default function Home() {
             </Head>
             <div className="grid min-h-screen w-full grid-cols-5">
                 <div className="col-span-5 flex items-center justify-center">
-                    <div className="flex flex-col items-center gap-4">
+                    <div className="flex flex-col items-center gap-4 px-3 sm:px-0">
                         <div className="m-3 rounded-full border-4 border-black p-5">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -33,11 +33,11 @@ export default function Home() {
                                 />
                             </svg>
                         </div>
-                        <h1 className="py-3 text-4xl font-light">
+                        <h1 className="py-3 text-3xl font-light sm:text-4xl">
                             Welcome to Idea Buddy!
                         </h1>
                         <div className=""></div>
-                        <div className="flex w-full gap-6">
+                        <div className="flex w-full gap-5 sm:gap-6">
                             <Link
                                 href="/api/auth/login"
                                 className="btn w-full text-center"
