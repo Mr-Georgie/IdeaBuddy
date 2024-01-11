@@ -37,30 +37,20 @@ export default function Home() {
                             Welcome to Idea Buddy!
                         </h1>
                         <div className=""></div>
-                        {!user && (
-                            <div className="flex w-full gap-6">
-                                <Link
-                                    href="/api/auth/login"
-                                    className="btn w-full text-center"
-                                >
-                                    Sign in
-                                </Link>
-                                <Link
-                                    href="/api/auth/signup"
-                                    className="btn w-full text-center"
-                                >
-                                    Sign up
-                                </Link>
-                            </div>
-                        )}
-                        {!!user && (
+                        <div className="flex w-full gap-6">
                             <Link
-                                href="/api/auth/logout"
-                                className="btn w-full py-3 text-center"
+                                href="/api/auth/login"
+                                className="btn w-full text-center"
                             >
-                                Sign out
+                                Sign in
                             </Link>
-                        )}
+                            <Link
+                                href="/api/auth/signup"
+                                className="btn w-full text-center"
+                            >
+                                Sign up
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
