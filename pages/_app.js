@@ -1,5 +1,6 @@
 import { AppProvider } from "@/AppContext";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { Analytics } from "@vercel/analytics/react";
 import { Outfit } from "next/font/google";
 import Head from "next/head";
 import "../styles/globals.css";
@@ -18,7 +19,7 @@ function App({ Component, pageProps }) {
                 </Head>
                 <main className={`${outfit.variable} font-body`}>
                     <Component {...pageProps} />
-                    <AnalyticsProps />
+                    <Analytics />
                 </main>
             </UserProvider>
         </AppProvider>
