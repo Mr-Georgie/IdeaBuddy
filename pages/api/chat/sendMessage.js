@@ -106,7 +106,12 @@ export default async function POST(req) {
                 {
                     role: "system",
                     content:
-                        "Include a suggested name for the idea, its relevance, opportunities, challenges, mitigation, a roadmap to create an MVP for it and any other useful feedback that would help convince others to take a chance on the idea",
+                        "Include a suggested name for the idea, its relevance, opportunities, challenges, mitigation, mention already existing competitors/competition,",
+                },
+                {
+                    role: "system",
+                    content:
+                        "and a roadmap to create an MVP for it and any other useful feedback that would help convince others to take a chance on the idea",
                 },
                 {
                     role: "system",
