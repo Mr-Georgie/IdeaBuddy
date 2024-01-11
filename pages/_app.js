@@ -18,6 +18,7 @@ function App({ Component, pageProps }) {
                 </Head>
                 <main className={`${outfit.variable} font-body`}>
                     <Component {...pageProps} />
+                    <AnalyticsProps />
                 </main>
             </UserProvider>
         </AppProvider>
