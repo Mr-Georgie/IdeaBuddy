@@ -134,7 +134,9 @@ export const SmallSidebar = ({ chatId }) => {
                         />
                     </svg>
 
-                    <span className="">New Idea?</span>
+                    <span className="" onClick={toggleSidebar}>
+                        New Idea?
+                    </span>
                 </Link>
             ) : (
                 <div

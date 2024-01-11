@@ -223,7 +223,7 @@ export default function ChatPage({ chatId, messages }) {
                     <Navbar />
                     {/* bg-gray-700 */}
                     {!removePlaceholder && allMessages.length === 0 ? (
-                        <div className="flex flex-1 flex-col justify-between overflow-auto py-0">
+                        <div className="flex flex-1 flex-col justify-between">
                             <div className="my-20 flex flex-col items-center justify-center gap-3 dark:text-white">
                                 <span className="rounded-full bg-white p-3 dark:bg-gray-900">
                                     <svg
