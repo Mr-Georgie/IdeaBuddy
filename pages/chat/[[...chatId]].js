@@ -259,7 +259,7 @@ export default function ChatPage({ chatId, messages }) {
                             </div>
                         </div>
                     ) : (
-                        <div className="h-full flex-1 overflow-auto py-4 sm:flex sm:flex-col-reverse">
+                        <div className="flex h-full flex-1 flex-col-reverse overflow-auto py-4">
                             {/* // flex-col-reverse will make chat auto scroll as the browser would see content from bottom to top */}
                             {/* // mb-auto will make chat start from the top */}
                             <div className="mb-auto">
