@@ -259,7 +259,7 @@ export default function ChatPage({ chatId, messages }) {
                             </div>
                         </div>
                     ) : (
-                        <div className="flex flex-1 flex-col-reverse overflow-auto py-4">
+                        <div className="flex h-full flex-1 flex-col-reverse overflow-auto py-4">
                             {/* // flex-col-reverse will make chat auto scroll as the browser would see content from bottom to top */}
                             {/* // mb-auto will make chat start from the top */}
                             <div className="mb-auto">
@@ -280,7 +280,11 @@ export default function ChatPage({ chatId, messages }) {
                         </div>
                     )}
                     {/* footer */}
-                    <div className={`mx-6 py-10 md:mx-10 lg:mx-44 xl:mx-52 ${fetchingResponse ? "hidden sm:block" : "block"}`}>
+                    <div
+                        className={`mx-6 py-10 md:mx-10 lg:mx-44 xl:mx-52 ${
+                            fetchingResponse ? "hidden sm:block" : "block"
+                        }`}
+                    >
                         {/* bg-gray-800 */}
                         <form onSubmit={handleSubmit}>
                             <fieldset
