@@ -1,3 +1,3 @@
 const { Footer } = require("./Footer");
 
-export Footer;
+export { Footer };

@@ -1,3 +1,3 @@
 const { ChatSidebar } = require("./ChatSidebar");
 
-export ChatSidebar;
+export { ChatSidebar };

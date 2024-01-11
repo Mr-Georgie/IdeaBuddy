@@ -96,7 +96,7 @@ export default function ChatPage({ chatId, messages }) {
         } else {
             addMessageToChat(chatId);
         }
-    }, [fetchingResponse, openAIResponse, newChatId]);
+    }, [fetchingResponse, openAIResponse, newChatId, chatId]);
 
     // update UI with corresponding messages from Open AI
     useEffect(() => {

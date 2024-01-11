@@ -1,3 +1,3 @@
 const { Navbar } = require("./Navbar");
 
-export Navbar;
+export { Navbar };

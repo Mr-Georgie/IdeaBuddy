@@ -1,3 +1,3 @@
 const { SmallNavItems } = require("./SmallSidebar");
 
-export SmallNavItems;
+export { SmallNavItems };

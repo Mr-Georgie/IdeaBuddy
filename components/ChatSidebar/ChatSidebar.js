@@ -187,7 +187,7 @@ export const ChatSidebar = ({ chatId }) => {
                     {!searchTerm ? (
                         <div className="mx-4 rounded-2xl  pb-2 dark:bg-black">
                             <h5 className="p-3 text-xs font-light dark:text-gray-400">
-                                Today's ideas
+                                {"Today's ideas"}
                             </h5>
                             <SidebarItem
                                 chats={todaysChatList}
