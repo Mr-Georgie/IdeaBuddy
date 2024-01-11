@@ -221,6 +221,7 @@ export default function ChatPage({ chatId, messages }) {
                 <ChatSidebar chatId={chatId} />
                 <div className="flex flex-col overflow-hidden bg-slate-50 dark:bg-gray-600">
                     <Navbar />
+                    {/* main chat content */}
                     {/* bg-gray-700 */}
                     {!removePlaceholder && allMessages.length === 0 ? (
                         <div className="flex flex-1 flex-col justify-between">
@@ -263,26 +264,23 @@ export default function ChatPage({ chatId, messages }) {
                             {/* // mb-auto will make chat start from the top */}
                             <div className="mb-auto">
                                 {allMessages.map((message) => (
-                                    <>
-                                        <Message
-                                            key={message._id}
-                                            role={message.role}
-                                            content={message.content}
-                                        />
-                                    </>
+                                    <Message
+                                        key={message._id}
+                                        role={message.role}
+                                        content={message.content}
+                                    />
                                 ))}
                                 {!!openAIResponse && (
-                                    <>
-                                        <Message
-                                            role={"assistant"}
-                                            content={openAIResponse}
-                                        />
-                                    </>
+                                    <Message
+                                        role={"assistant"}
+                                        content={openAIResponse}
+                                    />
                                 )}
                             </div>
                         </div>
                     )}
-                    <div className="mx-6 py-10 md:mx-10 lg:mx-44 xl:mx-52">
+                    {/* footer */}
+                    <div className={`mx-6 py-10 md:mx-10 lg:mx-44 xl:mx-52 ${fetchingResponse ? "hidden sm:block" : "block"}`}>
                         {/* bg-gray-800 */}
                         <form onSubmit={handleSubmit}>
                             <fieldset

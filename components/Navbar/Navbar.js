@@ -3,7 +3,8 @@ import { useState } from "react";
 
 export const Navbar = () => {
     const [onDarkMode, setOnDarkMode] = useState(false);
-    const { isSidebarOpen, setIsSidebarOpen } = useAppContext();
+    const { isSidebarOpen, setIsSidebarOpen, fetchingResponse } =
+        useAppContext();
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -113,7 +114,11 @@ export const Navbar = () => {
                     </button>
                 </div>
             </div>
-            <div className="flex items-center justify-between bg-white p-4 shadow-lg sm:hidden dark:bg-gray-600 dark:text-white">
+            <div
+                className={`${
+                    fetchingResponse ? "hidden sm:flex" : "flex"
+                } items-center justify-between bg-white p-4 shadow-lg sm:hidden dark:bg-gray-600 dark:text-white`}
+            >
                 {/* hamburger */}
                 <button className="btn-white" onClick={toggleSidebar}>
                     <svg
