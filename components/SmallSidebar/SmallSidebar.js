@@ -97,7 +97,7 @@ export const SmallSidebar = ({ chatId }) => {
     const { user } = useUser();
 
     return (
-        <div className="fixed z-50 h-screen w-[250px] bg-white shadow-lg sm:hidden dark:border-black dark:bg-black">
+        <div className="fixed z-50 h-screen w-[250px] overflow-y-auto bg-white shadow-lg sm:hidden dark:border-black dark:bg-black">
             <div className="flex justify-end p-3">
                 <button className="btn-chat" onClick={toggleSidebar}>
                     <svg
