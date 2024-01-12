@@ -1,17 +1,14 @@
 import { useAppContext } from "@/AppContext";
 import { Navbar } from "@/components/Navbar/Navbar";
 import { SmallSidebar } from "@/components/SmallSidebar/SmallSidebar";
-import clientPromise from "@/lib/mongodb";
-import { getSession } from "@auth0/nextjs-auth0";
 import { ChatSidebar } from "components/ChatSidebar/ChatSidebar";
 import { Message } from "components/Message/Message";
-import { ObjectId } from "mongodb";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
 
-export default function ChatPage({ chatId, messages }) {
+export default function ChatPage({ chatId }) {
     const {
         fetchingResponse,
         setFetchingResponse,
@@ -20,6 +17,8 @@ export default function ChatPage({ chatId, messages }) {
     } = useAppContext();
 
     const inputRef = useRef(null);
+
+    const [messages, setMessages] = useState([]);
 
     const [messageText, setMessageText] = useState("");
     const [newChatId, setNewChatId] = useState(null);
@@ -35,9 +34,36 @@ export default function ChatPage({ chatId, messages }) {
         setNewChatMessages([]);
         setIsSidebarOpen(false);
         setNewChatId(null);
-        if (!chatId) {
-            setRemovePlaceholder(false);
-        }
+
+        const fetchMessages = async () => {
+            if (chatId) {
+                const response = await fetch(`/api/chat/getChat`, {
+                    headers: {
+                        "content-type": "application/json",
+                    },
+                    method: "POST",
+                    body: JSON.stringify({
+                        chatId,
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setMessages(data.messages || []);
+                } else {
+                    console.log(
+                        "Failed to fetch chat messages. Error:",
+                        response.error,
+                        await response.json().then((resp) => resp.message)
+                    );
+                }
+            } else {
+                setMessages([]);
+                setRemovePlaceholder(false);
+            }
+        };
+
+        fetchMessages();
     }, [chatId]);
 
     // if we've created a new chat
@@ -88,19 +114,19 @@ export default function ChatPage({ chatId, messages }) {
                     }
                 } else {
                     console.log("Failed to add message to chat");
-                    // console.log("chatId: ", chatId);
-                    // console.log("fetchResponse: ", fetchingResponse);
                 }
             } catch (error) {
                 console.error("An error occurred:", error);
             }
         };
 
-        if (newChatId) {
-            addMessageToChat(newChatId);
-        } else {
-            addMessageToChat(chatId);
-        }
+        addMessageToChat(chatId);
+
+        // if (newChatId) {
+        //     addMessageToChat(newChatId);
+        // } else {
+        //     addMessageToChat(chatId);
+        // }
     }, [fetchingResponse, openAIResponse, newChatId, chatId]);
 
     // update UI with corresponding messages from Open AI
@@ -348,43 +374,13 @@ export const getServerSideProps = async (ctx) => {
         return {
             props: {
                 chatId: null,
-                title: "",
-                messages: [],
             },
         };
     }
 
-    const { user } = await getSession(ctx.req, ctx.res);
-    const client = await clientPromise;
-    const db = client.db("Ideadb");
-
-    try {
-        const chat = await db.collection("chats").findOne({
-            userId: user.sub,
-            _id: new ObjectId(chatId),
-        });
-
-        if (!chat) {
-            throw new Error("Chat not found");
-        }
-
-        const messages = chat.messages || [];
-        const messagesWithId = messages.map((message) => ({
-            ...message,
-            _id: uuid(),
-        }));
-
-        return {
-            props: {
-                chatId,
-                title: chat.title || "",
-                messages: messagesWithId,
-            },
-        };
-    } catch (error) {
-        console.error("Error fetching chat:", error);
-        return {
-            notFound: true,
-        };
-    }
+    return {
+        props: {
+            chatId,
+        },
+    };
 };

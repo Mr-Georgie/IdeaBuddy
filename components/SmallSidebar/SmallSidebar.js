@@ -313,7 +313,11 @@ export const SmallSidebar = ({ chatId }) => {
                         </div>
                     )}
                     {!fetchingResponse ? (
-                        <Link href="/" className="btn-chat" title="about">
+                        <Link
+                            href="http://localhost:3000/about"
+                            className="btn-chat"
+                            title="about"
+                        >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
