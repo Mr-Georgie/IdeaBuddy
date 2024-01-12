@@ -280,7 +280,7 @@ export default function ChatPage({ chatId }) {
                     )}
                     {/* footer */}
                     <div
-                        className={`mx-6 py-10 md:mx-10 lg:mx-44 xl:mx-52 ${
+                        className={`mx-6 py-3 sm:py-10 md:mx-10 lg:mx-44 xl:mx-52 ${
                             fetchingResponse ? "hidden sm:block" : "block"
                         }`}
                     >
@@ -288,7 +288,7 @@ export default function ChatPage({ chatId }) {
                         {/* bg-gray-800 */}
                         <form onSubmit={handleSubmit}>
                             <fieldset
-                                className="relative w-full rounded-2xl border border-gray-300 p-1 transition-all focus-within:border-indigo-500 sm:p-2"
+                                className="relative w-full rounded-2xl border border-gray-300 p-2 transition-all focus-within:border-indigo-500"
                                 disabled={fetchingResponse}
                             >
                                 <textarea
