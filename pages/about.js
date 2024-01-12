@@ -49,7 +49,7 @@ export default function About() {
                                 https://github.com/Mr-Georgie/IdeaBuddy
                             </Link>
                             <Link
-                                href="https://georgeisiguzo.netlify.app/"
+                                href="https://georgeisiguzo.com"
                                 className=" text-indigo-400 underline"
                             >
                                 {"Developer's portfolio"}
