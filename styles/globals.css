@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global Safari Fix */
+@media not all and (min-resolution: 0.001dpcm) {
+    @supports (-webkit-appearance: none) {
+        .safari-fix {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-flex-direction: column-reverse;
+            -ms-flex-direction: column-reverse;
+            flex-direction: column-reverse;
+        }
+    }
+}
+
 @layer components {
     .btn {
         @apply rounded-2xl bg-indigo-500 p-3 text-white hover:bg-indigo-600 disabled:bg-indigo-300;
