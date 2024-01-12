@@ -64,7 +64,7 @@ export default function ChatPage({ chatId }) {
         };
 
         fetchMessages();
-    }, [chatId]);
+    }, [chatId]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // if we've created a new chat
     useEffect(() => {
@@ -72,12 +72,12 @@ export default function ChatPage({ chatId }) {
             setNewChatId(null);
             router.push(`/chat/${newChatId}`);
         }
-    }, [newChatId, fetchingResponse, router]);
+    }, [newChatId, fetchingResponse, router]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // re-render component when we've fetched message from db
     useEffect(() => {
         // ...
-    }, [messages, newChatMessages]);
+    }, [messages, newChatMessages]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // add message to existing chat when we are done
     // streaming and we have the chatId of the new chat just created
@@ -127,7 +127,7 @@ export default function ChatPage({ chatId }) {
         // } else {
         //     addMessageToChat(chatId);
         // }
-    }, [fetchingResponse, openAIResponse, newChatId, chatId]);
+    }, [fetchingResponse, openAIResponse, newChatId, chatId]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // update UI with corresponding messages from Open AI
     useEffect(() => {

@@ -52,7 +52,7 @@ export default function About() {
                                 href="https://georgeisiguzo.netlify.app/"
                                 className=" text-indigo-400 underline"
                             >
-                                Developer's portfolio
+                                {"Developer's portfolio"}
                             </Link>
                             <Link
                                 href="https://www.udemy.com/course/nextjs-chatgpt/"
