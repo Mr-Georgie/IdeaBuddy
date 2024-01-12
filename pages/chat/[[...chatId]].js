@@ -288,7 +288,7 @@ export default function ChatPage({ chatId }) {
                         {/* bg-gray-800 */}
                         <form onSubmit={handleSubmit}>
                             <fieldset
-                                className="relative w-full rounded-2xl border border-gray-300 p-2 transition-all focus-within:border-indigo-500"
+                                className="relative w-full rounded-2xl border border-gray-300 p-1 transition-all focus-within:border-indigo-500 sm:p-2"
                                 disabled={fetchingResponse}
                             >
                                 <textarea
