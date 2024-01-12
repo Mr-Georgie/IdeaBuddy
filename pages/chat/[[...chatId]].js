@@ -280,7 +280,7 @@ export default function ChatPage({ chatId }) {
                     )}
                     {/* footer */}
                     <div
-                        className={`mx-6 py-10 md:mx-10 lg:mx-44 xl:mx-52 ${
+                        className={`mx-6 py-3 sm:py-10 md:mx-10 lg:mx-44 xl:mx-52 ${
                             fetchingResponse ? "hidden sm:block" : "block"
                         }`}
                     >
