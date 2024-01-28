@@ -6,6 +6,11 @@ Idea Buddy is an incredibly intelligent and quick-thinking personal brainstormin
 
 <img width="1440" alt="Idea Buddy Screenshot" src="https://github.com/Mr-Georgie/IdeaBuddy/assets/28518667/bb4b0fdf-c6d2-4ff6-8ebb-a9c2d71996a3">
 
+## Live Demo
+
+Check out the live demo of Idea Buddy [here](https://idea-buddy-ai.vercel.app/).
+
+
 ## Getting Started
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
